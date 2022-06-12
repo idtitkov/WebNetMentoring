@@ -1,16 +1,16 @@
-﻿using DataAccess.Model;
-using DataAccess.Services;
-using DataAccess.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DataAccess.Model;
+using DataAccess.Services;
+using DataAccess.ViewModels;
 
 namespace Services
 {
-    public class ProductsService
+    public class ProductsService : IProductsService
     {
         private readonly NorthwindContext context;
 
@@ -19,20 +19,19 @@ namespace Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IEnumerable<Products>> GetProductsAsync()
+        public async Task<IEnumerable<ProductViewModel>> GetProductsAsync()
         {
             var products = await context.Products.ToListAsync();
             products.ForEach(p =>
-            {
-                p.Category = context.Categories.Where(c => c.CategoryId == p.CategoryId).Single();
-                p.Supplier = context.Suppliers.Where(s => s.SupplierId == p.SupplierId).Single();
-            });
-            products.Reverse();
+                {
+                    p.Category = context.Categories.Where(c => c.CategoryId == p.CategoryId).Single();
+                    p.Supplier = context.Suppliers.Where(s => s.SupplierId == p.SupplierId).Single();
+                });
 
-            return products;
+            return products.Select(p => ModelConvertionService.ProductsToProductViewModel(p)).Reverse();
         }
 
-        public async Task<IEnumerable<Products>> GetProductsAsync(int quantity)
+        public async Task<IEnumerable<ProductViewModel>> GetProductsAsync(int quantity)
         {
             if (quantity == 0)
             {
@@ -67,6 +66,7 @@ namespace Services
             await context.SaveChangesAsync();
 
         }
+
         public async Task UpdateProductAsync(ProductViewModel productViewModel)
         {
             var product = ModelConvertionService.ProductViewModelToProducts(productViewModel);

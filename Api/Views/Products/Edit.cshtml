@@ -1,0 +1,70 @@
+﻿@model DataAccess.ViewModels.ProductViewModel
+@inject Services.ICategoriesService categoriesService
+@inject Services.ISuppliersService suppliersService
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<h1>Edit product</h1>
+
+<form action="/Products/Update" method="post">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label asp-for="ProductName" for="product-name">Name</label>
+            <input asp-for="ProductName" type="text" class="form-control" name="ProductName" id="product-name" placeholder="Name">
+            <span asp-validation-for="ProductName" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="QuantityPerUnit" for="product-quantity">Quantity</label>
+            <input asp-for="QuantityPerUnit" type="text" class="form-control" name="QuantityPerUnit" id="product-quantity" placeholder="Quantity">
+            <span asp-validation-for="QuantityPerUnit" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="UnitPrice" for="product-price">Price</label>
+            <input asp-for="UnitPrice" type="number" class="form-control" name="UnitPrice" id="product-price" placeholder="Price">
+            <span asp-validation-for="UnitPrice" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="CategoryId" for="product-category">Category</label>
+            <select asp-for="CategoryId" class="form-control" name="CategoryId" id="product-category">
+                @foreach (var category in await categoriesService.GetCategoriesAsync())
+                {
+                    <option value="@category.CategoryId">@category.CategoryName</option>
+                }
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="SupplierId" for="product-supplier">Supplier</label>
+            <select asp-for="SupplierId" class="form-control" name="SupplierId" id="product-supplier">
+                @foreach (var supplier in await suppliersService.GetSuppliersAsync())
+                {
+                    <option value="@supplier.SupplierId">@supplier.CompanyName</option>
+                }
+            </select>
+            <span asp-validation-for="SupplierId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="Discontinued" class="form-check-input" type="checkbox" name="Discontinued" id="product-discontinued">
+            <label asp-for="Discontinued" class="form-check-label" for="product-discontinued">Discontinued</label>
+        </div>
+        <span asp-validation-for="Discontinued" class="text-danger"></span>
+    </div>
+    <input asp-for="ProductId" type="hidden" name="ProductId" id="product-id" />
+    <button type="submit" class="btn btn-primary">Save changes</button>
+</form>
+
+<div>
+    <a asp-action="Products">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

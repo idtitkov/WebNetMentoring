@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class SuppliersService
+    public class SuppliersService : ISuppliersService
     {
         private readonly NorthwindContext context;
 

@@ -1,4 +1,7 @@
-using DataAccess.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Api.Middleware;
+using DataAccess.Model;
 using Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Api
 {
@@ -31,9 +33,9 @@ namespace Api
             services.AddDbContext<NorthwindContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SQLCONNSTR_Northwind")));
             services.AddTransient<NorthwindContext>();
 
-            services.AddTransient<CategoriesService>();
-            services.AddTransient<ProductsService>();
-            services.AddTransient<SuppliersService>();
+            services.AddTransient<ICategoriesService, CategoriesService>();
+            services.AddTransient<IProductsService, ProductsService>();
+            services.AddTransient<ISuppliersService, SuppliersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,12 +49,12 @@ namespace Api
 
             if (env.IsDevelopment())
             {
-                logger.LogInformation("In Development");
+                logger.LogInformation("In Development mode");
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                logger.LogInformation("Not Development");
+                logger.LogInformation("In Production mode");
                 app.UseExceptionHandler("/Home/Error");
             }
 
@@ -62,11 +64,21 @@ namespace Api
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ImageCachingMiddleware>("ImageCache", 10, TimeSpan.FromSeconds(60));
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/Images/{id:int}", context =>
+                {
+                    var id = context.Request.RouteValues["id"];
+                    context.Response.Redirect($"../Categories/GetImage/{id}");
+                    return Task.CompletedTask;
+                });
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
             });
         }
     }
