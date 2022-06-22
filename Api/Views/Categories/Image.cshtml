@@ -1,0 +1,19 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Image";
+}
+
+<h1>Image</h1>
+
+<img src="@Url.Content($"~/Categories/GetImage/{Model}")" alt="Category Image" />
+
+<h2>Change image</h2>
+@using (Html.BeginForm("SetImage", "Categories", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label for="imageUpload">Image upload</label>
+        <input type="file" class="form-control-file" name="image" id="imageUpload">
+        <input type="hidden" name="id" value="@Model">
+        <input type="submit" value="Загрузить" />
+    </div>
+}
