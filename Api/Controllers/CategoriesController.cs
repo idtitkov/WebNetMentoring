@@ -41,7 +41,7 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetImage(int id)
         {
-            var imageArray = await categoriesService.GetCategoriesImage(id);
+            byte[] imageArray = await categoriesService.GetCategoriesImage(id);
             var imageStream = new MemoryStream(imageArray);
             var fileStream = new FileStreamResult(imageStream, "image/jpeg");
             return fileStream;

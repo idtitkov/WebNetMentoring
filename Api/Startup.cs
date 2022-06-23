@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Api.Middleware;
 using DataAccess.Model;
 using Services;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Api
 {
@@ -29,9 +28,10 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddDbContext<NorthwindContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SQLCONNSTR_Northwind")));
-            services.AddTransient<NorthwindContext>();
+            //services.AddDbContext<NorthwindContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SQLAZURECONNSTR_Northwind")));
 
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IProductsService, ProductsService>();
@@ -78,7 +78,6 @@ namespace Api
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-
             });
         }
     }

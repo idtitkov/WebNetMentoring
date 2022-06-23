@@ -2,7 +2,7 @@
 @inject Services.ICategoriesService categoriesService
 @inject Services.ISuppliersService suppliersService
 @{
-    var qwerty = new DataAccess.ViewModels.ProductViewModel();
+    Layout = "_DataLayout";
     ViewData["Title"] = "Products";
 }
 
@@ -75,7 +75,7 @@
                 <td>@product.SupplierName</td>
                 <td class="text-center">@product.Discontinued</td>
                 <td>
-                    @using (Html.BeginForm("Edit", "Products", product))
+                    @using (Html.BeginForm("Edit", "Products", product, FormMethod.Post))
                     {
                         <button type="submit" class="btn btn-primary">Edit</button>
                     }

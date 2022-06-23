@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Api</title>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -35,24 +35,37 @@
         </div>
     </header>
 
+    @if (IsSectionDefined("Header"))
+    {
+        @RenderSection("Header", required: false)
+    }
+    else
+    {
+        <div class="text-center">
+            <h1 class="display-4">Welcome</h1>
+            <p>Explore <a href="~/Products">Products</a> or <a href="~/Categories">Categories</a>.</p>
+        </div>
+    }
+
     <div class="container">
         <main role="main" class="pb-3">
+            @await Component.InvokeAsync("Breadcrumbs", new { path = @Context.Request.Path.ToString() })
             @RenderBody()
         </main>
-    </div>
+    </div
 
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Explore <a href="Products">Products</a> or <a href="Categories">Categories</a>.</p>
-        <img src="~/img/products.jpg" height="400" alt="Products">
-        <img src="~/img/categories.jpg" height="400" alt="Categories">
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @DateTime.Now.Year - .Net Web Mentoring - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    @if (IsSectionDefined("Footer"))
+    {
+        @RenderSection("Footer", required: false)
+    }
+    else
+    {
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; @DateTime.Now.Year - .Net Web Mentoring - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
