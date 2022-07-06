@@ -1,0 +1,7 @@
+﻿@model IDictionary<string, string>
+
+@foreach (var item in Model)
+{
+    <a href="@item.Key">@item.Value</a>
+}
+
