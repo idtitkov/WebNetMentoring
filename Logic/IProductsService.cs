@@ -7,11 +7,13 @@ namespace Services
 {
     public interface IProductsService
     {
-        Task AddProductAsync(Products product);
-        Task AddProductAsync(ProductViewModel productViewModel);
+        Task<Products> AddProductAsync(Products product);
+        Task<Products> AddProductAsync(ProductViewModel productViewModel);
         Task<IEnumerable<ProductViewModel>> GetProductsAsync();
         Task<IEnumerable<ProductViewModel>> GetProductsAsync(int quantity);
+        Task<ProductViewModel> GetProductAsync(int id);
         Task UpdateProductAsync(Products product);
         Task UpdateProductAsync(ProductViewModel productViewModel);
+        Task<bool> DeleteProductAsync(int id);
     }
 }

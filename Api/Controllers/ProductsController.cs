@@ -23,7 +23,7 @@ namespace Api.Controllers
             this.logger.LogInformation("ProductsController started");
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(Index))]
         public async Task<IActionResult> Index()
         {
             var productsCount = configuration.GetValue<int>("ProductsCount");
@@ -32,7 +32,7 @@ namespace Api.Controllers
             return View(products);
         }
 
-        [HttpPost]
+        [HttpPost(Name = nameof(Add))]
         public async Task<IActionResult> Add(ProductViewModel product)
         {
             if (ModelState.IsValid)
@@ -43,13 +43,13 @@ namespace Api.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpPost(Name = nameof(Edit))]
         public IActionResult Edit(ProductViewModel product)
         {
             return View(product);
         }
 
-        [HttpPost]
+        [HttpPost(Name = nameof(Update))]
         public async Task<IActionResult> Update(ProductViewModel product)
         {
             if (ModelState.IsValid)

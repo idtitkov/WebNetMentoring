@@ -23,7 +23,7 @@ namespace Api.Controllers
             this.logger.LogInformation("CategoriesController started");
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(Index))]
         [LogActionFilter(logParameters: false)]
         public async Task<IActionResult> Index()
         {
@@ -31,14 +31,14 @@ namespace Api.Controllers
             return View(categories);
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(Image))]
         [LogActionFilter(logParameters: true)]
         public IActionResult Image(int id)
         {
             return View(id);
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(GetImage))]
         public async Task<IActionResult> GetImage(int id)
         {
             byte[] imageArray = await categoriesService.GetCategoriesImage(id);
@@ -47,7 +47,7 @@ namespace Api.Controllers
             return fileStream;
         }
 
-        [HttpPost]
+        [HttpPost(Name = nameof(SetImage))]
         public async Task<IActionResult> SetImage(IFormFile image, int id)
         {
             if (!IsImage(image))

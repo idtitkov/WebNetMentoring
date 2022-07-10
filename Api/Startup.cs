@@ -36,6 +36,8 @@ namespace Api
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<ISuppliersService, SuppliersService>();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +48,11 @@ namespace Api
             {
                 logger.LogInformation($"Current configuration {item.Path} {item.Value}");
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Northwind API v1")
+            );
 
             if (env.IsDevelopment())
             {
