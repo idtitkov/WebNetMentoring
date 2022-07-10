@@ -48,16 +48,18 @@ namespace Services
             }
         }
 
-        public async Task AddProductAsync(Products product)
+        public async Task<Products> AddProductAsync(Products product)
         {
-            await context.Products.AddAsync(product);
+            var createdProduct = await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
+            return createdProduct.Entity;
         }
 
-        public async Task AddProductAsync(ProductViewModel productViewModel)
+        public async Task<Products> AddProductAsync(ProductViewModel productViewModel)
         {
             var product = ModelConvertionService.ProductViewModelToProducts(productViewModel);
-            await AddProductAsync(product);
+            var createdProduct = await AddProductAsync(product);
+            return createdProduct;
         }
 
         public async Task UpdateProductAsync(Products product)
@@ -71,6 +73,29 @@ namespace Services
         {
             var product = ModelConvertionService.ProductViewModelToProducts(productViewModel);
             await UpdateProductAsync(product);
+        }
+
+        public async Task<ProductViewModel> GetProductAsync(int id)
+        {
+            var product = await context.Products.FindAsync(id);
+
+            product.Category = context.Categories.Where(c => c.CategoryId == product.CategoryId).Single();
+            product.Supplier = context.Suppliers.Where(s => s.SupplierId == product.SupplierId).Single();
+
+            return ModelConvertionService.ProductsToProductViewModel(product);
+        }
+
+        public async Task<bool> DeleteProductAsync(int id)
+        {
+            var product = await context.Products.FindAsync(id);
+            if (product != null)
+            {
+                context.Products.Remove(product);
+                await context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
     }
 }
