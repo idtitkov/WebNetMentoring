@@ -39,9 +39,8 @@ namespace Api.Controllers.Api
             }
             catch (Exception)
             {
+                return BadRequest();
             }
-
-            return BadRequest();
         }
 
         [HttpGet("{id}", Name = nameof(GetProduct))]
