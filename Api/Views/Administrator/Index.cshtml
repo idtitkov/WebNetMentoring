@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model UserManager<IdentityUser>
+@{
+    ViewData["Title"] = "Users";
+    Layout = "_DataLayout";
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Password (hash)</th>
+            <th scope="col">Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <th scope="row">@user.Id</th>
+                <td>@user.UserName</td>
+                <td>@user.PasswordHash</td>
+                <td>@user.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
