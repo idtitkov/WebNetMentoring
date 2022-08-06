@@ -59,6 +59,14 @@ namespace Api
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddRazorPages();
+            services.AddWebOptimizer(pipeline =>
+            {
+                pipeline.AddJavaScriptBundle("/js/bundle.js", "lib/**/*.js")
+                    .UseContentRoot();
+
+                pipeline.MinifyCssFiles();
+                pipeline.MinifyJsFiles();
+            });
 
             services.AddSwaggerGen();
         }
@@ -88,6 +96,7 @@ namespace Api
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseWebOptimizer();
             app.UseStaticFiles();
             app.UseRouting();
 
